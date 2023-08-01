@@ -1,4 +1,2 @@
-asgiref==3.7.2
 Django
-sqlparse==0.4.4
 psycopg2-binary
