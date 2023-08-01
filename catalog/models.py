@@ -23,3 +23,19 @@ class Product(models.Model):
         verbose_name = 'Товар'  # Настройка для наименования одного объекта
         verbose_name_plural = 'Товары'  # Настройка для наименования набора объектов
         ordering = ('product_name',)  # сортировка по наименованию
+
+
+class Category(models.Model):
+    category_name = models.CharField(max_length=150, verbose_name='Наименование')
+    category_description = models.CharField(max_length=150, verbose_name='Описание')
+
+    # is_active = models.BooleanField(default=True, verbose_name='учится')
+
+    def __str__(self):
+        # Строковое отображение объекта
+        return f'{self.category_name}'
+
+    class Meta:
+        verbose_name = 'Категория'  # Настройка для наименования одного объекта
+        verbose_name_plural = 'Категории'  # Настройка для наименования набора объектов
+        ordering = ('category_name',)  # сортировка по наименованию
