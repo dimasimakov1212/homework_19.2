@@ -7,6 +7,9 @@ def index(request):
 
 
 def contact(request):
+    """
+    Получает контактные данные, котрые клиент вносит при регистрации
+    """
 
     if request.method == 'POST':
         name = request.POST.get('name')

@@ -6,14 +6,18 @@ from catalog.models import Product, Category
 
 
 class Command(BaseCommand):
+    """
+    Класс очищает таблицы и заносит новые данные
+    """
 
     def handle(self, *args, **options):
 
-        Product.objects.all().delete()
-        Category.objects.all().delete()
+        Product.objects.all().delete()  # очищаем таблицу товаров
+        Category.objects.all().delete()  # очищаем таблицу категорий товаров
 
-        date_now = datetime.date.today
+        date_now = datetime.date.today  # текущая дата
 
+        # список товаров
         products_list = [
             {'product_name': 'IPhone 10', 'product_description': 'Смартфон 5,5"', 'product_category': 'Телефоны',
              'product_price': '95000.00', 'date_creation': date_now, 'date_changing': date_now},
@@ -34,19 +38,23 @@ class Command(BaseCommand):
              'date_changing': date_now}
         ]
 
+        # список категорий товаров
         categories_list = [
             {'category_name': 'Телефоны', 'category_description': 'Устройства мобильной, проводной, спутниковой связи'},
             {'category_name': 'Телевизоры', 'category_description': 'Телевизионные приемники, смарт-телевизоры'},
             {'category_name': 'Холодильники', 'category_description': 'Холодильники, морозильные камеры'},
         ]
 
+        # заполняем список товаров для добавления в БД
         products_for_create = []
         for product in products_list:
             products_for_create.append(Product(**product))
 
+        # заполняем список категорий товаров для добавления в БД
         categories_for_create = []
         for category in categories_list:
             categories_for_create.append(Category(**category))
 
+        # заносим данные в БД
         Product.objects.bulk_create(products_for_create)
         Category.objects.bulk_create(categories_for_create)

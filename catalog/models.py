@@ -7,6 +7,9 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Product(models.Model):
+    """
+    Класс для создания товаров
+    """
     product_name = models.CharField(max_length=150, verbose_name='Наименование')
     product_description = models.CharField(max_length=150, verbose_name='Описание')
     product_preview = models.ImageField(upload_to='products/', verbose_name='Превью', **NULLABLE)
@@ -28,6 +31,9 @@ class Product(models.Model):
 
 
 class Category(models.Model):
+    """
+    Класс для создания категорий товаров
+    """
     category_name = models.CharField(max_length=150, verbose_name='Наименование')
     category_description = models.CharField(max_length=150, verbose_name='Описание')
 
