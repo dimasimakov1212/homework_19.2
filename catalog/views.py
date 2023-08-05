@@ -25,7 +25,11 @@ def contact(request):
 
 def product_show(request):
 
-    prod = Product.objects.get(pk=16)
-    print(prod)
+    prod = Product.objects.all()
+    context = {
+        'products_list': prod
+    }
+    for product in prod:
+        print(product)
 
-    return render(request, 'catalog/home.html', {'name': prod})
+    return render(request, 'catalog/home.html', context)

@@ -1,6 +1,7 @@
 import datetime
 
 from django.core.management import BaseCommand
+from django.db import connection
 
 from catalog.models import Product, Category
 
@@ -12,8 +13,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        Product.objects.all().delete()  # очищаем таблицу товаров
-        Category.objects.all().delete()  # очищаем таблицу категорий товаров
+        # Product.objects.all().delete()  # очищаем таблицу товаров
+        # Category.objects.all().delete()  # очищаем таблицу категорий товаров
+
+        cursor = connection.cursor()  # создаем подключение к БД
+        cursor.execute("TRUNCATE TABLE catalog_product RESTART IDENTITY")  # очищаем таблицу и сбрасываем нумерацию
+        cursor.execute("TRUNCATE TABLE catalog_category RESTART IDENTITY")
+        connection.close()  # закрываем соединение
 
         date_now = datetime.date.today  # текущая дата
 
