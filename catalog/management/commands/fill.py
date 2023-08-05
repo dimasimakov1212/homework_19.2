@@ -25,21 +25,21 @@ class Command(BaseCommand):
 
         # список товаров
         products_list = [
-            {'product_name': 'IPhone 10', 'product_description': 'Смартфон 5,5"', 'product_category': 'Телефоны',
+            {'product_name': 'IPhone 10', 'product_description': 'Смартфон 5,5" 256Гб', 'product_category': 'Телефоны',
              'product_price': '95000.00', 'date_creation': date_now, 'date_changing': date_now},
             {'product_name': 'Ariston 201', 'product_description': 'Холодильник встраиваемый',
              'product_category': 'Холодильники', 'product_price': '65700.00', 'date_creation': date_now,
              'date_changing': date_now},
-            {'product_name': 'Samsung 1012', 'product_description': 'Смартфон 5"',
+            {'product_name': 'Samsung 1012', 'product_description': 'Смартфон 5" 32Гб',
              'product_category': 'Телефоны', 'product_price': '10000.00', 'date_creation': date_now,
              'date_changing': date_now},
-            {'product_name': 'Samsung 1015', 'product_description': 'Смартфон 5,5"',
+            {'product_name': 'Samsung 1015', 'product_description': 'Смартфон 5,5" 32Гб',
              'product_category': 'Телефоны', 'product_price': '12000.00', 'date_creation': date_now,
              'date_changing': date_now},
             {'product_name': 'Bosh H102', 'product_description': 'Холодильник двухкамерный',
              'product_category': 'Холодильники', 'product_price': '54000.00', 'date_creation': date_now,
              'date_changing': date_now},
-            {'product_name': 'Sony 2754 телевизор', 'product_description': 'Телевизор LCD 37"',
+            {'product_name': 'Sony 2754', 'product_description': 'Телевизор LCD 37"',
              'product_category': 'Телевизоры', 'product_price': '28000.00', 'date_creation': date_now,
              'date_changing': date_now}
         ]

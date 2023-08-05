@@ -24,12 +24,28 @@ def contact(request):
 
 
 def product_show(request):
+    """
+    Выводит 5 последних товаров на страницу
+    """
 
-    prod = Product.objects.all()
+    products_all = Product.objects.all()  # получаем весь список товаров
+
+    num_prod = len(products_all)  # определяем количество товаров
+    product_list = []  # задаем список для вывода на страницу
+
+    # отбор последних 5 товаров
+    for product_id in range(num_prod, num_prod - 5, -1):
+        for product in products_all:
+            if product.id == product_id:
+                product_list.append(product)
+
+    # задаем контекстный параметр для вывода на страницу
     context = {
-        'products_list': prod
+        'products_list': product_list
     }
-    for product in prod:
+
+    # вывод выбранных товаров в консоль
+    for product in product_list:
         print(product)
 
     return render(request, 'catalog/home.html', context)
