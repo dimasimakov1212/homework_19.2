@@ -1,3 +1,21 @@
 from django.contrib import admin
 
-# Register your models here.
+from catalog.models import Product, Category
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    """
+    Описывает параметры для вывода таблицы товаров в админку
+    """
+    list_display = ('id', 'product_name', 'product_category', 'product_price',)
+    list_filter = ('product_category',)
+    search_fields = ('product_name', 'product_description',)
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    """
+    Описывает параметры для вывода таблицы категорий товаров в админку
+    """
+    list_display = ('id', 'category_name',)
