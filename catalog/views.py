@@ -33,11 +33,12 @@ def product_show(request):
     num_prod = len(products_all)  # определяем количество товаров
     product_list = []  # задаем список для вывода на страницу
 
-    # отбор последних 5 товаров
+    # отбор последних 5 товаров по id
     for product_id in range(num_prod, num_prod - 5, -1):
         for product in products_all:
             if product.id == product_id:
                 product_list.append(product)
+                break
 
     # задаем контекстный параметр для вывода на страницу
     context = {
