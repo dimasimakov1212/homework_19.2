@@ -20,7 +20,12 @@ def contact(request):
         message = request.POST.get('message')
         print(f'Новое сообщение от {name}({phone}): {message}')
 
-    return render(request, 'catalog/contacts.html')
+    # задаем контекстный параметр для вывода на страницу
+    context = {
+        'title': 'Контакты'
+    }
+
+    return render(request, 'catalog/contacts.html', context)
 
 
 def product_show(request):
@@ -42,7 +47,8 @@ def product_show(request):
 
     # задаем контекстный параметр для вывода на страницу
     context = {
-        'products_list': product_list
+        'products_list': product_list,
+        'title': 'Главная'
     }
 
     # вывод выбранных товаров в консоль
