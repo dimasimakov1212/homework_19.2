@@ -1,3 +1,4 @@
+{% load my_tags %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,6 +29,16 @@
                         <li>{{ product_info.product_description }}</li>
                     </ul>
                     <a class="p-2 btn btn-outline-primary">Купить</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="card-md-4">
+                <div class="card-header">
+                    <img class="card-img-top"
+                         src="{{ product_info.product_preview|my_media }}"
+                        alt="Card image cap" >
+
                 </div>
             </div>
         </div>
