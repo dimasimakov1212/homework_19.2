@@ -30,20 +30,10 @@ def contact(request):
 
 def product_show(request):
     """
-    Выводит 5 последних товаров на страницу
+    Выводит 5 последних товаров на главную страницу
     """
 
-    products_all = Product.objects.all()  # получаем весь список товаров
-
-    num_prod = len(products_all)  # определяем количество товаров
-    product_list = []  # задаем список для вывода на страницу
-
-    # отбор последних 5 товаров по id
-    for product_id in range(num_prod, num_prod - 5, -1):
-        for product in products_all:
-            if product.id == product_id:
-                product_list.append(product)
-                break
+    product_list = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
 
     # задаем контекстный параметр для вывода на страницу
     context = {
@@ -56,3 +46,19 @@ def product_show(request):
         print(product)
 
     return render(request, 'catalog/home.html', context)
+
+
+def product(request, product_id):
+    """
+    Выводит товар на отдельную страницу
+    """
+
+    product_info = Product.objects.get(pk=product_id)  # получаем данные товара по его id
+
+    # задаем контекстный параметр для вывода на страницу
+    context = {
+        'title': 'Карточка товара',
+        'product_info': product_info
+    }
+
+    return render(request, 'catalog/product.html', context)
