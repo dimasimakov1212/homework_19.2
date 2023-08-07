@@ -12,7 +12,7 @@ class Product(models.Model):
     """
     product_name = models.CharField(max_length=150, verbose_name='Наименование')
     product_description = models.CharField(max_length=150, verbose_name='Описание')
-    product_preview = models.ImageField(upload_to='products/', verbose_name='Превью', **NULLABLE)
+    product_preview = models.ImageField(upload_to='catalog/', verbose_name='Превью', **NULLABLE)
     product_category = models.CharField(max_length=150, verbose_name='Категория')
     product_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     date_creation = models.DateField(auto_now=False, auto_now_add=True, verbose_name='Дата создания')
