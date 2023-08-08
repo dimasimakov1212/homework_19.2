@@ -13,7 +13,7 @@
         <div class="card-body">
             <h2 class="card-title pricing-card-title">{{ product.product_price }}</h2>
             <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                <li>{{ product.product_category }}</li>
+                <li>{{ product.product_description|truncatechars:100 }}</li>
             </ul>
             <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product' product_id=product.id %}">Купить</a>
         </div>
