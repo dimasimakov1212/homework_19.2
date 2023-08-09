@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% for product in products_list %}
+{% for product in product_list %}
 <div class="col-2">
     <div class="card mb-4 box-shadow">
         <div class="card-header">
@@ -15,7 +15,7 @@
             <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                 <li>{{ product.product_description|truncatechars:100 }}</li>
             </ul>
-            <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product' product_id=product.id %}">Купить</a>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product' pk=product.id %}">Купить</a>
         </div>
     </div>
 </div>

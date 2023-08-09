@@ -20,13 +20,13 @@
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
                     <div class="card-header">
-                        <h6 class="my-0 font-weight-normal">{{ product_info.product_name }}</h6>
+                        <h6 class="my-0 font-weight-normal">{{ product.product_name }}</h6>
                     </div>
                 </div>
                 <div class="card-body">
-                    <h2 class="card-title pricing-card-title">{{ product_info.product_price }}</h2>
+                    <h2 class="card-title pricing-card-title">{{ product.product_price }}</h2>
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <li>{{ product_info.product_description }}</li>
+                        <li>{{ product.product_description }}</li>
                     </ul>
                     <a class="p-2 btn btn-outline-primary">Купить</a>
                 </div>
@@ -36,7 +36,7 @@
             <div class="card-md-4">
                 <div class="card-header">
                     <img class="card-img-top"
-                         src="{{ product_info.product_preview|my_media }}"
+                         src="{{ product.product_preview|my_media }}"
                         alt="Card image cap" >
 
                 </div>
