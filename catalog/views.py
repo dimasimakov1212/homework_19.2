@@ -71,7 +71,7 @@ class ProductDetailView(DetailView):
     Выводит информаццию об одном, выбранном на главной странице, товаре вместо функции product
     """
     model = Product
-    template_name = 'catalog/product.html'
+    # template_name = 'catalog/product_detail.html'
 
     def get_context_data(self, **kwargs):
         """
@@ -100,4 +100,4 @@ class ProductDetailView(DetailView):
 #         'product_info': product_info
 #     }
 #
-#     return render(request, 'catalog/product.html', context)
+#     return render(request, 'catalog/product_detail.html', context)
