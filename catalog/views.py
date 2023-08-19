@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
-from catalog.models import Product
+from catalog.models import Product, Blog
 
 
 def index(request):
@@ -101,3 +101,29 @@ class ProductDetailView(DetailView):
 #     }
 #
 #     return render(request, 'catalog/product_detail.html', context)
+
+
+class BlogListView(ListView):
+    """
+    Выводит информаццию о статьях блога
+    """
+
+    model = Blog
+    template_name = 'catalog/blog_list.html'
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogListView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        """
+        Выводит в список только опубликованные статьи
+        """
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(blog_is_active=True)
+
+        return queryset

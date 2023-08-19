@@ -17,9 +17,30 @@
 <div class="container">
 
     <div class="row text-center">
-        {% block content %}
-        {% endblock %}
+        {% for object in object_list %}
+
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="card-text">Статья: {{ object.blog_title }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a type="button" class="btn btn-sm btn-outline-secondary"
+                               href="#">View</a>
+                            <a type="button" class="btn btn-sm btn-outline-secondary"
+                               href="#">Edit</a>
+                            <a type="button" class="btn btn-sm btn-outline-danger"
+                               href="#">Delete</a>
+                        </div>
+                        <small class="text-body-secondary">Количество просмотров - {{ object.blog_views_count }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
     </div>
+
     {% include 'catalog/includes/inc_catalog_bottom.html' %}
 
 </div>
