@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from catalog.models import Product
 
@@ -28,37 +28,76 @@ def contact(request):
     return render(request, 'catalog/contacts.html', context)
 
 
-def product_show(request):
+class ProductListView(ListView):
     """
-    Выводит 5 последних товаров на главную страницу
-    """
-
-    product_list = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
-
-    # задаем контекстный параметр для вывода на страницу
-    context = {
-        'products_list': product_list,
-        'title': 'Главная'
-    }
-
-    # вывод выбранных товаров в консоль
-    for product in product_list:
-        print(product)
-
-    return render(request, 'catalog/home.html', context)
-
-
-def product(request, product_id):
-    """
-    Выводит товар на отдельную страницу
+    Выводит информаццию о 5 последних товарах на главную страницу вместо функции product_show
     """
 
-    product_info = Product.objects.get(pk=product_id)  # получаем данные товара по его id
+    model = Product
+    queryset = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
+    template_name = 'catalog/home.html'
 
-    # задаем контекстный параметр для вывода на страницу
-    context = {
-        'title': 'Карточка товара',
-        'product_info': product_info
-    }
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(ProductListView, self).get_context_data(**kwargs)
+        context['title'] = 'Главная'
+        return context
 
-    return render(request, 'catalog/product.html', context)
+
+# def product_show(request):
+#     """
+#     Выводит 5 последних товаров на главную страницу
+#     """
+#
+#     product_list = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
+#
+#     # задаем контекстный параметр для вывода на страницу
+#     context = {
+#         'products_list': product_list,
+#         'title': 'Главная'
+#     }
+#
+#     # вывод выбранных товаров в консоль
+#     for product in product_list:
+#         print(product)
+#
+#     return render(request, 'catalog/home.html', context)
+
+
+class ProductDetailView(DetailView):
+    """
+    Выводит информаццию об одном, выбранном на главной странице, товаре вместо функции product
+    """
+    model = Product
+    # template_name = 'catalog/product_detail.html'
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        context['title'] = 'Карточка товара'
+        return context
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     print(context)
+    #     return context
+
+
+# def product(request, product_id):
+#     """
+#     Выводит товар на отдельную страницу
+#     """
+#
+#     product_info = Product.objects.get(pk=product_id)  # получаем данные товара по его id
+#
+#     # задаем контекстный параметр для вывода на страницу
+#     context = {
+#         'title': 'Карточка товара',
+#         'product_info': product_info
+#     }
+#
+#     return render(request, 'catalog/product_detail.html', context)
