@@ -43,6 +43,7 @@ class ProductListView(ListView):
         """
         context = super(ProductListView, self).get_context_data(**kwargs)
         context['title'] = 'Главная'
+        context['title_2'] = 'лучшие товары для вас'
         return context
 
 
@@ -117,6 +118,7 @@ class BlogListView(ListView):
         """
         context = super(BlogListView, self).get_context_data(**kwargs)
         context['title'] = 'Блог'
+        context['title_2'] = 'полезные статьи'
         return context
 
     def get_queryset(self, *args, **kwargs):
@@ -127,3 +129,28 @@ class BlogListView(ListView):
         queryset = queryset.filter(blog_is_active=True)
 
         return queryset
+
+
+class BlogDetailView(DetailView):
+    """
+    Выводит информаццию о статье
+    """
+    model = Blog
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogDetailView, self).get_context_data(**kwargs)
+        context['title_2'] = 'Просмотр статьи'
+        return context
+
+    def get_object(self, queryset=None):
+        """
+        Считает количество просмотров статьи
+        """
+        self.object = super().get_object(queryset)
+        self.object.blog_views_count += 1
+        self.object.save()
+
+        return self.object
