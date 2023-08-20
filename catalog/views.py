@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from pytils.translit import slugify
 
-from catalog.models import Product
+from catalog.models import Product, Blog
 
 
 def index(request):
@@ -43,6 +45,7 @@ class ProductListView(ListView):
         """
         context = super(ProductListView, self).get_context_data(**kwargs)
         context['title'] = 'Главная'
+        context['title_2'] = 'лучшие товары для вас'
         return context
 
 
@@ -81,23 +84,135 @@ class ProductDetailView(DetailView):
         context['title'] = 'Карточка товара'
         return context
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     print(context)
-    #     return context
+
+class BlogListView(ListView):
+    """
+    Выводит информаццию о статьях блога
+    """
+
+    model = Blog
+    template_name = 'catalog/blog_list.html'
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogListView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Полезные статьи'
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        """
+        Выводит в список только опубликованные статьи
+        """
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(blog_is_active=True)
+
+        return queryset
 
 
-# def product(request, product_id):
-#     """
-#     Выводит товар на отдельную страницу
-#     """
-#
-#     product_info = Product.objects.get(pk=product_id)  # получаем данные товара по его id
-#
-#     # задаем контекстный параметр для вывода на страницу
-#     context = {
-#         'title': 'Карточка товара',
-#         'product_info': product_info
-#     }
-#
-#     return render(request, 'catalog/product_detail.html', context)
+class BlogDetailView(DetailView):
+    """
+    Выводит информаццию о статье
+    """
+    model = Blog
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogDetailView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Просмотр статьи'
+        return context
+
+    def get_object(self, queryset=None):
+        """
+        Считает количество просмотров статьи
+        """
+        self.object = super().get_object(queryset)
+        self.object.blog_views_count += 1
+        self.object.save()
+
+        return self.object
+
+
+class BlogCreateView(CreateView):
+    """
+    Выводит форму создания статьи
+    """
+    model = Blog
+    fields = ('blog_title', 'blog_text', 'blog_preview')
+    success_url = reverse_lazy('catalog:blog_list')
+
+    def form_valid(self, form):
+        """
+        Реализует создание Slug — человекопонятный URL
+        """
+        if form.is_valid():
+            new_article = form.save()
+            new_article.blog_slug = slugify(new_article.blog_title)
+            new_article.save()
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Создание статьи'
+        return context
+
+
+class BlogUpdateView(UpdateView):
+    """
+    Выводит форму редактирования статьи
+    """
+    model = Blog
+    fields = ('blog_title', 'blog_text', 'blog_preview')
+
+    def form_valid(self, form):
+        """
+        Реализует создание Slug — человекопонятный URL
+        """
+        if form.is_valid():
+            new_article = form.save()
+            new_article.blog_slug = slugify(new_article.blog_title)
+            new_article.save()
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """
+        Получает адрес перенаправления после редактирования материала
+        """
+        return reverse('catalog:blog_article', args=[self.kwargs.get('pk')])
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Изменение статьи'
+        return context
+
+
+class BlogDeleteView(DeleteView):
+    """
+    Выводит форму удаления статьи
+    """
+    model = Blog
+    success_url = reverse_lazy('catalog:blog_list')
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogDeleteView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Удаление статьи'
+        return context

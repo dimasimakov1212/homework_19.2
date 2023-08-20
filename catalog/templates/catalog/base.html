@@ -11,14 +11,26 @@
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-4">{{ title }}</h1>
-    <p class="lead">Skystore - наша техника для вас</p>
+    <p class="lead">{{ title_2 }}</p>
 </div>
+
+<div class="col-12">
+    <div class="row">
+        {% block content_1 %}
+        {% endblock %}
+    </div>
+</div>
+<br>
 
 <div class="container">
 
-    <div class="row text-center">
-        {% block content %}
-        {% endblock %}
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
     </div>
     {% include 'catalog/includes/inc_catalog_bottom.html' %}
 
