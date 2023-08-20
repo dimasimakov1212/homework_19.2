@@ -142,7 +142,7 @@ class BlogCreateView(CreateView):
     Выводит форму создания статьи
     """
     model = Blog
-    fields = ('blog_title', 'blog_text',)
+    fields = ('blog_title', 'blog_text', 'blog_preview')
     success_url = reverse_lazy('catalog:blog_list')
 
     def form_valid(self, form):
