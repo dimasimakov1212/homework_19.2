@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
 from catalog.models import Product, Blog
@@ -180,3 +180,11 @@ class BlogUpdateView(UpdateView):
         Получает адрес перенаправления после редактирования материала
         """
         return reverse('catalog:blog_article', args=[self.kwargs.get('pk')])
+
+
+class BlogDeleteView(DeleteView):
+    """
+    Выводит форму удаления статьи
+    """
+    model = Blog
+    success_url = reverse_lazy('catalog:blog_list')

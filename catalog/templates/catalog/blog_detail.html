@@ -16,7 +16,7 @@
                         <a type="button" class="btn btn-sm btn-outline-secondary"
                            href="{% url 'catalog:edit_article' pk=object.id %}">Edit</a>
                         <a type="button" class="btn btn-sm btn-outline-danger"
-                           href="#">Delete</a>
+                           href="{% url 'catalog:delete_article' pk=object.id %}">Delete</a>
                     </div>
                 </div>
                 <small class="text-white">Количество просмотров - {{ object.blog_views_count }}</small>
