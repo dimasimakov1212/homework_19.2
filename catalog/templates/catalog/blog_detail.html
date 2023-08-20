@@ -19,14 +19,19 @@
                            href="{% url 'catalog:delete_article' pk=object.id %}">Delete</a>
                     </div>
                 </div>
-                <small class="text-white">Количество просмотров - {{ object.blog_views_count }}</small>
+
             </div>
+            <small class="text-white">Количество просмотров - {{ object.blog_views_count }}</small><br>
+            <small class="text-white">Дата создания - {{ object.blog_date_creation }}</small>
         </div>
     </div>
-
 </div>
 <div class="col-12">
+    {% if object.blog_preview %}
     <img src="/media/{{ object.blog_preview }}"/>
+    {% else %}
+    <img src="/media/catalog/no-image.jpg"/>
+    {% endif %}
 </div>
 
 {% endblock %}
