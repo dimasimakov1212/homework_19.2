@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
+from pytils.translit import slugify
 
 from catalog.models import Product, Blog
 
@@ -154,3 +156,23 @@ class BlogDetailView(DetailView):
         self.object.save()
 
         return self.object
+
+
+class BlogCreateView(CreateView):
+    """
+    Выводит форму создания статьи
+    """
+    model = Blog
+    fields = ('blog_title', 'blog_text',)
+    success_url = reverse_lazy('catalog:blog_list')
+
+    def form_valid(self, form):
+        """
+        Реализует создание Slug — человекопонятный URL
+        """
+        if form.is_valid():
+            new_article = form.save()
+            new_article.blog_slug = slugify(new_article.blog_title)
+            new_article.save()
+
+        return super().form_valid(form)

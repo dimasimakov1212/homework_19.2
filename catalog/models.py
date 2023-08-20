@@ -54,7 +54,7 @@ class Blog(models.Model):
     Класс для ведения блога
     """
     blog_title = models.CharField(max_length=150, verbose_name='Заголовок')
-    blog_text = models.CharField(max_length=150, verbose_name='Содержимое')
+    blog_text = models.TextField(verbose_name='Содержимое')
     blog_preview = models.ImageField(upload_to='catalog/', verbose_name='Превью', **NULLABLE)
     blog_slug = models.CharField(max_length=150, verbose_name='slug', **NULLABLE)
     blog_date_creation = models.DateField(auto_now=False, auto_now_add=True, verbose_name='Дата создания')
