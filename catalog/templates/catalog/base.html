@@ -24,9 +24,13 @@
 
 <div class="container">
 
-    <div class="row text-center">
-        {% block content %}
-        {% endblock %}
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
     </div>
     {% include 'catalog/includes/inc_catalog_bottom.html' %}
 
