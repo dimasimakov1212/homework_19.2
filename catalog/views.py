@@ -99,7 +99,7 @@ class BlogListView(ListView):
         """
         context = super(BlogListView, self).get_context_data(**kwargs)
         context['title'] = 'Блог'
-        context['title_2'] = 'полезные статьи'
+        context['title_2'] = 'Полезные статьи'
         return context
 
     def get_queryset(self, *args, **kwargs):
@@ -123,6 +123,7 @@ class BlogDetailView(DetailView):
         Выводит контекстную информацию в шаблон
         """
         context = super(BlogDetailView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
         context['title_2'] = 'Просмотр статьи'
         return context
 
@@ -156,13 +157,22 @@ class BlogCreateView(CreateView):
 
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Создание статьи'
+        return context
+
 
 class BlogUpdateView(UpdateView):
     """
     Выводит форму редактирования статьи
     """
     model = Blog
-    fields = ('blog_title', 'blog_text',)
+    fields = ('blog_title', 'blog_text', 'blog_preview')
 
     def form_valid(self, form):
         """
@@ -181,6 +191,15 @@ class BlogUpdateView(UpdateView):
         """
         return reverse('catalog:blog_article', args=[self.kwargs.get('pk')])
 
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Изменение статьи'
+        return context
+
 
 class BlogDeleteView(DeleteView):
     """
@@ -188,3 +207,12 @@ class BlogDeleteView(DeleteView):
     """
     model = Blog
     success_url = reverse_lazy('catalog:blog_list')
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context = super(BlogDeleteView, self).get_context_data(**kwargs)
+        context['title'] = 'Блог'
+        context['title_2'] = 'Удаление статьи'
+        return context
