@@ -32,7 +32,7 @@
                             <a type="button" class="btn btn-sm btn-outline-secondary"
                                href="{% url 'catalog:blog_article' pk=object.id %}">View</a>
                             <a type="button" class="btn btn-sm btn-outline-secondary"
-                               href="#">Edit</a>
+                               href="{% url 'catalog:edit_article' pk=object.id %}">Edit</a>
                             <a type="button" class="btn btn-sm btn-outline-danger"
                                href="#">Delete</a>
                         </div>

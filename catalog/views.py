@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from pytils.translit import slugify
 
 from catalog.models import Product, Blog
@@ -84,27 +84,6 @@ class ProductDetailView(DetailView):
         context['title'] = 'Карточка товара'
         return context
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     print(context)
-    #     return context
-
-
-# def product(request, product_id):
-#     """
-#     Выводит товар на отдельную страницу
-#     """
-#
-#     product_info = Product.objects.get(pk=product_id)  # получаем данные товара по его id
-#
-#     # задаем контекстный параметр для вывода на страницу
-#     context = {
-#         'title': 'Карточка товара',
-#         'product_info': product_info
-#     }
-#
-#     return render(request, 'catalog/product_detail.html', context)
-
 
 class BlogListView(ListView):
     """
@@ -176,3 +155,28 @@ class BlogCreateView(CreateView):
             new_article.save()
 
         return super().form_valid(form)
+
+
+class BlogUpdateView(UpdateView):
+    """
+    Выводит форму редактирования статьи
+    """
+    model = Blog
+    fields = ('blog_title', 'blog_text',)
+
+    def form_valid(self, form):
+        """
+        Реализует создание Slug — человекопонятный URL
+        """
+        if form.is_valid():
+            new_article = form.save()
+            new_article.blog_slug = slugify(new_article.blog_title)
+            new_article.save()
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """
+        Получает адрес перенаправления после редактирования материала
+        """
+        return reverse('catalog:blog_article', args=[self.kwargs.get('pk')])
