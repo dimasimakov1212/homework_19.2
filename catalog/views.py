@@ -3,6 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
+from catalog.forms import ProductForm
 from catalog.models import Product, Blog
 
 
@@ -83,6 +84,46 @@ class ProductDetailView(DetailView):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
         context['title'] = 'Карточка товара'
         return context
+
+
+class ProductCreateView(CreateView):
+    """
+    Выводит форму создания продукта
+    """
+    model = Product
+    form_class = ProductForm
+
+    success_url = reverse_lazy('catalog:home')
+
+    # def form_valid(self, form):
+    #     """
+    #     Реализует создание Slug — человекопонятный URL
+    #     """
+    #     if form.is_valid():
+    #         new_article = form.save()
+    #         new_article.blog_slug = slugify(new_article.blog_title)
+    #         new_article.save()
+    #
+    #     return super().form_valid(form)
+    #
+    # def get_context_data(self, **kwargs):
+    #     """
+    #     Выводит контекстную информацию в шаблон
+    #     """
+    #     context = super(BlogCreateView, self).get_context_data(**kwargs)
+    #     context['title'] = 'Блог'
+    #     context['title_2'] = 'Создание статьи'
+    #     return context
+
+
+class ProductUpdateView(UpdateView):
+    """
+    Выводит форму редактирования товара
+    """
+    model = Product
+    form_class = ProductForm
+
+    success_url = reverse_lazy('catalog:home')
 
 
 class BlogListView(ListView):

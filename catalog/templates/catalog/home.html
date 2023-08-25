@@ -1,5 +1,13 @@
 {% extends 'catalog/base.html' %}
 
+{% block content_1 %}
+<div class="row py-lg-2">
+    <div class="col-lg-11 col-md-8 mx-auto">
+        <a class="btn btn-outline-primary" href="{% url 'catalog:create_product' %}">Создать товар</a>
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
 
 {% for product in product_list %}
@@ -16,6 +24,7 @@
                 <li>{{ product.product_description|truncatechars:100 }}</li>
             </ul>
             <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product' pk=product.id %}">Купить</a>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:edit_product' pk=product.id %}">Изменить</a>
         </div>
     </div>
 </div>
