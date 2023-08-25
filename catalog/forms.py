@@ -1,6 +1,6 @@
 from django import forms
 
-from catalog.models import Product, Blog
+from catalog.models import Product, Blog, Version
 
 
 class ProductForm(forms.ModelForm):
@@ -56,6 +56,21 @@ class BlogForm(forms.ModelForm):
         model = Blog
 
         fields = ('blog_title', 'blog_text', 'blog_preview')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class VersionForm(forms.ModelForm):
+    """
+    Создает форму для заполнения даннных предмета
+    """
+    class Meta:
+        model = Version
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
