@@ -1,6 +1,6 @@
 from django import forms
 
-from catalog.models import Product
+from catalog.models import Product, Blog
 
 
 class ProductForm(forms.ModelForm):
@@ -42,3 +42,23 @@ class ProductForm(forms.ModelForm):
                 raise forms.ValidationError(f'Слово "{item}" запрещено к использованию, выберите другое')
 
         return cleaned_data
+
+
+class BlogForm(forms.ModelForm):
+    """
+     Создает форму для создания товара
+    """
+
+    class Meta:
+        """
+        Определяет параметры формы
+        """
+        model = Blog
+
+        fields = ('blog_title', 'blog_text', 'blog_preview')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
