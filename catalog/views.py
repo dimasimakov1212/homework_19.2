@@ -3,7 +3,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
-from catalog.forms import ProductForm
+from catalog.forms import ProductForm, BlogForm
 from catalog.models import Product, Blog
 
 
@@ -184,7 +184,8 @@ class BlogCreateView(CreateView):
     Выводит форму создания статьи
     """
     model = Blog
-    fields = ('blog_title', 'blog_text', 'blog_preview')
+    form_class = BlogForm
+    # fields = ('blog_title', 'blog_text', 'blog_preview')
     success_url = reverse_lazy('catalog:blog_list')
 
     def form_valid(self, form):
@@ -213,7 +214,7 @@ class BlogUpdateView(UpdateView):
     Выводит форму редактирования статьи
     """
     model = Blog
-    fields = ('blog_title', 'blog_text', 'blog_preview')
+    form_class = BlogForm
 
     def form_valid(self, form):
         """
