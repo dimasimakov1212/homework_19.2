@@ -49,6 +49,25 @@ class Product(models.Model):
         ordering = ('product_name',)  # сортировка по наименованию
 
 
+class Version(models.Model):
+    """
+    Класс для создания версии товароа
+    """
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    version_number = models.IntegerField(default=1, blank=True, verbose_name='Номер версии')
+    version_name = models.CharField(max_length=150, verbose_name='Название')
+    is_active = models.BooleanField(default=True, verbose_name='Текущая версия')
+
+    def __str__(self):
+        # Строковое отображение объекта
+        return f'{self.product} {self.version_number}'
+
+    class Meta:
+        verbose_name = 'Версия'  # Настройка для наименования одного объекта
+        verbose_name_plural = 'Версии'  # Настройка для наименования набора объектов
+        ordering = ('version_number',)  # сортировка по номеру версии
+
+
 class Blog(models.Model):
     """
     Класс для ведения блога

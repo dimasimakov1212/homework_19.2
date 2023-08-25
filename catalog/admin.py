@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from catalog.models import Product, Category, Blog
+from catalog.models import Product, Category, Blog, Version
 
 
 @admin.register(Product)
@@ -24,8 +24,18 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
     """
-    Описывает параметры для вывода таблицы статей блогав админку
+    Описывает параметры для вывода таблицы статей блога в админку
     """
     list_display = ('blog_title', 'blog_date_creation', 'blog_views_count', 'blog_is_active',)
     list_filter = ('blog_title',)
     search_fields = ('blog_title', 'blog_text',)
+
+
+@admin.register(Version)
+class VersionAdmin(admin.ModelAdmin):
+    """
+    Описывает параметры для вывода таблицы версий админку
+    """
+    list_display = ('product', 'version_number', 'version_name', 'is_active',)
+    list_filter = ('version_number',)
+    search_fields = ('version_number', 'version_name',)
