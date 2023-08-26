@@ -53,6 +53,7 @@ class Version(models.Model):
     """
     Класс для создания версии товароа
     """
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
     version_number = models.IntegerField(default=1, blank=True, verbose_name='Номер версии')
     version_name = models.CharField(max_length=150, verbose_name='Название')

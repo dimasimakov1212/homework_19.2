@@ -165,12 +165,12 @@ class ProductUpdateView(UpdateView):
 
             active_version_number = active_version.version_number
 
-            if active_version:
-                active_version_number += 1
-                Version.version_number = active_version_number
-
-            b = Version.version_number
-            print(b)
+            # if active_version:
+            #     active_version_number += 1
+            #     Version.version_number = active_version_number
+            #
+            # b = Version.version_number
+            # print(b)
 
         except AttributeError:
             pass
