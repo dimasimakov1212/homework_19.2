@@ -1,10 +1,11 @@
+from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
-from catalog.forms import ProductForm, BlogForm
-from catalog.models import Product, Blog
+from catalog.forms import ProductForm, BlogForm, VersionForm
+from catalog.models import Product, Blog, Version
 
 
 def index(request):
@@ -45,8 +46,19 @@ class ProductListView(ListView):
         Выводит контекстную информацию в шаблон
         """
         context = super(ProductListView, self).get_context_data(**kwargs)
+
+        for product in context['product_list']:
+            active_version = Version.objects.filter(product=product, is_active=True).last()
+            if active_version:
+                product.active_version_number = active_version.version_number
+                product.active_version_name = active_version.version_name
+            else:
+                product.active_version_number = None
+                product.active_version_name = None
+
         context['title'] = 'Главная'
         context['title_2'] = 'лучшие товары для вас'
+
         return context
 
 
@@ -81,8 +93,20 @@ class ProductDetailView(DetailView):
         """
         Выводит контекстную информацию в шаблон
         """
-        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+
+        active_version = Version.objects.filter(product=self.object, is_active=True).last()
+        if active_version:
+            context['active_version_number'] = active_version.version_number
+            context['active_version_name'] = active_version.version_name
+        else:
+            context['active_version_number'] = None
+            context['active_version_name'] = None
+
         context['title'] = 'Карточка товара'
+
+        print(context)
+
         return context
 
 
@@ -95,25 +119,32 @@ class ProductCreateView(CreateView):
 
     success_url = reverse_lazy('catalog:home')
 
-    # def form_valid(self, form):
-    #     """
-    #     Реализует создание Slug — человекопонятный URL
-    #     """
-    #     if form.is_valid():
-    #         new_article = form.save()
-    #         new_article.blog_slug = slugify(new_article.blog_title)
-    #         new_article.save()
-    #
-    #     return super().form_valid(form)
-    #
-    # def get_context_data(self, **kwargs):
-    #     """
-    #     Выводит контекстную информацию в шаблон
-    #     """
-    #     context = super(BlogCreateView, self).get_context_data(**kwargs)
-    #     context['title'] = 'Блог'
-    #     context['title_2'] = 'Создание статьи'
-    #     return context
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context_data = super().get_context_data(**kwargs)
+
+        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+
+        if self.request.method == 'POST':
+            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object)
+        else:
+            context_data['formset'] = VersionFormset(instance=self.object)
+
+        return context_data
+
+    def form_valid(self, form):
+        """
+        Проверяем данные на правильность заполнения
+        """
+        formset = self.get_context_data()['formset']
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+
+        return super().form_valid(form)
 
 
 class ProductUpdateView(UpdateView):
@@ -124,6 +155,35 @@ class ProductUpdateView(UpdateView):
     form_class = ProductForm
 
     success_url = reverse_lazy('catalog:home')
+
+    def get_context_data(self, **kwargs):
+        """
+        Выводит контекстную информацию в шаблон
+        """
+        context_data = super().get_context_data(**kwargs)
+
+        context_data['version_count'] = Version.version_number
+
+        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+
+        if self.request.method == 'POST':
+            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object)
+        else:
+            context_data['formset'] = VersionFormset(instance=self.object)
+
+        return context_data
+
+    def form_valid(self, form):
+        """
+        Проверяем данные на правильность заполнения
+        """
+        formset = self.get_context_data()['formset']
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+
+        return super().form_valid(form)
 
 
 class BlogListView(ListView):
@@ -172,7 +232,7 @@ class BlogDetailView(DetailView):
         """
         Считает количество просмотров статьи
         """
-        self.object = super().get_object(queryset)
+        self.object = super(VersionDetailView).get_object(queryset)
         self.object.blog_views_count += 1
         self.object.save()
 
