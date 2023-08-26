@@ -243,7 +243,7 @@ class BlogDetailView(DetailView):
         """
         Считает количество просмотров статьи
         """
-        self.object = super(VersionDetailView).get_object(queryset)
+        self.object = super(BlogDetailView, self).get_object(queryset)
         self.object.blog_views_count += 1
         self.object.save()
 
