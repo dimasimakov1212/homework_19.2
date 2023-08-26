@@ -105,8 +105,6 @@ class ProductDetailView(DetailView):
 
         context['title'] = 'Карточка товара'
 
-        print(context)
-
         return context
 
 
@@ -162,7 +160,20 @@ class ProductUpdateView(UpdateView):
         """
         context_data = super().get_context_data(**kwargs)
 
-        context_data['version_count'] = Version.version_number
+        try:
+            active_version = Version.objects.filter(product=self.object, is_active=True).last()
+
+            active_version_number = active_version.version_number
+
+            if active_version:
+                active_version_number += 1
+                Version.version_number = active_version_number
+
+            b = Version.version_number
+            print(b)
+
+        except AttributeError:
+            pass
 
         VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
 

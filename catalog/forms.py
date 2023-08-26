@@ -70,7 +70,7 @@ class VersionForm(forms.ModelForm):
     """
     class Meta:
         model = Version
-        fields = '__all__'
+        exclude = ('is_active',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
