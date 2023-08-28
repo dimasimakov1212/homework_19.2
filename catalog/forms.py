@@ -70,7 +70,8 @@ class VersionForm(forms.ModelForm):
     """
     class Meta:
         model = Version
-        exclude = ('is_active',)
+        # exclude = ('is_active',)
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,8 +79,8 @@ class VersionForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
-    def clean(self):
-        super().clean()
-        active_list = [form.cleaned_data['is_active'] for form in self.forms if 'is_active' in form.cleaned_data]
-        if active_list.count(True) > 1:
-            raise ValidationError('Возможна лишь одна активная версия. Пожалуйста, активируйте только 1 версию.')
+    # def clean(self):
+    #     super().clean()
+    #     active_list = [form.cleaned_data['is_active'] for form in self.forms if 'is_active' in form.cleaned_data]
+    #     if active_list.count(True) > 1:
+    #         raise ValidationError('Возможна лишь одна активная версия. Пожалуйста, активируйте только 1 версию.')
