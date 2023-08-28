@@ -1,6 +1,7 @@
 from django import forms
+from django.forms import BaseInlineFormSet, inlineformset_factory
 
-from catalog.models import Product, Blog
+from catalog.models import Product, Blog, Version
 
 
 class ProductForm(forms.ModelForm):
@@ -62,3 +63,38 @@ class BlogForm(forms.ModelForm):
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+
+class VersionForm(forms.ModelForm):
+    """
+    Создает форму для заполнения даннных версии товара
+    """
+
+    ACTIVE_VERSIONS = []  # задаем список активных версий товара
+
+    class Meta:
+        model = Version
+        # exclude = ('is_active',)
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    def clean(self):
+        """
+        Определяет количество активных версий товара
+        """
+        cleaned_data = super().clean()
+        version = self.cleaned_data['is_active']
+
+        if version:
+            VersionForm.ACTIVE_VERSIONS.append(True)
+
+        if len(VersionForm.ACTIVE_VERSIONS) > 1:
+            print('>1')
+            raise forms.ValidationError('Возможна лишь одна активная версия. Пожалуйста, активируйте только 1 версию.')
+
+        return cleaned_data
