@@ -163,14 +163,7 @@ class ProductUpdateView(UpdateView):
         try:
             active_version = Version.objects.filter(product=self.object, is_active=True).last()
 
-            active_version_number = active_version.version_number
-
-            # if active_version:
-            #     active_version_number += 1
-            #     Version.version_number = active_version_number
-            #
-            # b = Version.version_number
-            # print(b)
+            # active_version_number = active_version.version_number
 
         except AttributeError:
             pass

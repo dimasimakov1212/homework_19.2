@@ -98,3 +98,17 @@ class VersionForm(forms.ModelForm):
             raise forms.ValidationError('Возможна лишь одна активная версия. Пожалуйста, активируйте только 1 версию.')
 
         return cleaned_data
+
+# class VersionFormSet(BaseInlineFormSet):
+#
+#     def clean(self):
+#         super().clean()
+#         current_version = []
+#
+#         for form in self.forms:
+#
+#             if form['is_active'].data:
+#                 current_version.append(True)
+#
+#         if len(current_version) > 1:
+#             raise forms.ValidationError('Может быть только одна актуальная версия')
