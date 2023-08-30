@@ -15,7 +15,13 @@
                 <button type="submit" class="btn btn-primary">Сохранить</button>
             </div>
         </div>
+
     </form>
+    <br>
+    <div class="card-footer">
+        <a class="btn btn-danger" href="{% url 'users:generate_new_password' %}">Сгенирировать пароль</a>
+    </div>
 </div>
+
 
 {% endblock %}

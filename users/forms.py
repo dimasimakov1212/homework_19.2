@@ -29,10 +29,13 @@ class UserProfileForm(UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         """
-        Позволяет не выводить в профиле поле пароля
+        Дополнительные настройки
         """
         super().__init__(*args, **kwargs)
+
+        # Позволяет не выводить в профиле поле пароля
         self.fields['password'].widget = forms.HiddenInput()
 
+        # передаем в шаблон контроль формы
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'

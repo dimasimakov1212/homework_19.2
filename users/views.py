@@ -1,6 +1,9 @@
+import random
+
 from django.core.mail import send_mail
+from django.shortcuts import redirect
 from django.views.generic import CreateView, UpdateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
@@ -45,3 +48,22 @@ class ProfileView(UpdateView):
         Позволяет делать необязательным передачу pk объекта
         """
         return self.request.user
+
+
+def generate_new_password(request):
+    """
+    Генерирует новый пароль пользователя
+    """
+    new_password = ''.join([str(random.randint(0, 9)) for _ in range(12)])
+
+    send_mail(
+        subject='Новый пароль',
+        message=f'Ваш новый пароль: {new_password}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[request.user.email]
+    )
+
+    request.user.set_password(new_password)
+    request.user.save()
+
+    return redirect(reverse('catalog:home'))
