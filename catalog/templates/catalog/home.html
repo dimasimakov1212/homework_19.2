@@ -3,7 +3,11 @@
 {% block content_1 %}
 <div class="row py-lg-2">
     <div class="col-lg-11 col-md-8 mx-auto">
+        {% if user.is_authenticated %}
         <a class="btn btn-outline-primary" href="{% url 'catalog:create_product' %}">Создать товар</a>
+        {% else %}
+        <a class="btn btn-outline-primary">Создавать товары могут только зарегистрированные пользователи</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -32,7 +36,7 @@
             <small class="text-body-secondary">Владелец - {{ product.owner|default:"Не определен" }}</small>
             <br><br>
             <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product' pk=product.id %}">Купить</a>
-            {% if user.is_authenticated %}
+            {% if request.user == product.owner %}
             <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:edit_product' pk=product.id %}">Изменить</a>
             {% endif %}
         </div>

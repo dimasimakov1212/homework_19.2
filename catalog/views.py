@@ -41,7 +41,7 @@ class ProductListView(ListView):
     """
 
     model = Product
-    queryset = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
+    queryset = Product.objects.all().order_by('-pk')[:6]  # получаем 5 последних товаров
 
     template_name = 'catalog/home.html'
 
@@ -65,6 +65,22 @@ class ProductListView(ListView):
 
         return context
 
+    # def get_queryset(self, *args, **kwargs):
+    #     """
+    #     Выводит в список только товары конкретного пользователя,
+    #     либо если пользователь не авторизован - выводит все товары
+    #     """
+    #     queryset = super().get_queryset(*args, **kwargs)
+    #
+    #     try:
+    #         queryset = queryset.filter(owner=self.request.user)
+    #
+    #     except TypeError:
+    #         queryset = queryset.all().order_by('-pk')[:5]  # выводит последние 5 товаров
+    #
+    #     return queryset
+
+# {% if user.is_authenticated %}
 
 # def product_show(request):
 #     """
