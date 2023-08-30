@@ -15,7 +15,7 @@ class ProductForm(forms.ModelForm):
         """
         model = Product
 
-        exclude = ('date_creation', 'date_changing')  # выводит в форму все поля, кроме указанных
+        exclude = ('date_creation', 'date_changing', 'owner')  # выводит в форму все поля, кроме указанных
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -110,5 +110,6 @@ class VersionForm(forms.ModelForm):
 #             if form['is_active'].data:
 #                 current_version.append(True)
 #
-#         if len(current_version) > 1:
+#         if self.is_active and Version.objects.filter(is_active=True).count() > 1:
+#             print('>1')
 #             raise forms.ValidationError('Может быть только одна актуальная версия')
