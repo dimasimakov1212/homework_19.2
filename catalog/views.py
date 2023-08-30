@@ -1,3 +1,5 @@
+from django.contrib.auth import models
+from django.contrib.auth.models import User
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -6,6 +8,7 @@ from pytils.translit import slugify
 
 from catalog.forms import ProductForm, BlogForm, VersionForm
 from catalog.models import Product, Blog, Version
+
 
 
 def index(request):
@@ -34,11 +37,12 @@ def contact(request):
 
 class ProductListView(ListView):
     """
-    Выводит информаццию о 5 последних товарах на главную страницу вместо функции product_show
+    Выводит информаццию о 5 последних товарах на главную страницу
     """
 
     model = Product
     queryset = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
+
     template_name = 'catalog/home.html'
 
     def get_context_data(self, **kwargs):
