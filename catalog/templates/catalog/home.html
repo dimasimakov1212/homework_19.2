@@ -29,7 +29,8 @@
             <small class="text-body-secondary">Описание версии - {{ product.active_version_name }}</small>
             {% endif %}
             <br>
-            <br>
+            <small class="text-body-secondary">Владелец - {{ product.owner|default:"Не определен" }}</small>
+            <br><br>
             <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product' pk=product.id %}">Купить</a>
             <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:edit_product' pk=product.id %}">Изменить</a>
         </div>

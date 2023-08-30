@@ -3,6 +3,8 @@ from datetime import date
 from django.db import models
 from django.db.models import SET_DEFAULT, SET_NULL
 
+from config import settings
+
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -37,7 +39,7 @@ class Product(models.Model):
     date_creation = models.DateField(auto_now=False, auto_now_add=True, verbose_name='Дата создания')
     date_changing = models.DateField(auto_now=True, auto_now_add=False, verbose_name='Дата последнего изменения')
 
-    # is_active = models.BooleanField(default=True, verbose_name='учится')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='владелец', **NULLABLE)
 
     def __str__(self):
         # Строковое отображение объекта
