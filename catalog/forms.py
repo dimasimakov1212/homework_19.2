@@ -15,7 +15,7 @@ class ProductForm(forms.ModelForm):
         """
         model = Product
 
-        exclude = ('date_creation', 'date_changing', 'owner')  # выводит в форму все поля, кроме указанных
+        exclude = ('date_creation', 'date_changing', 'owner', 'is_active')  # выводит в форму все поля, кроме указанных
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

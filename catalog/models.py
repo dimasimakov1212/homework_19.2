@@ -31,6 +31,8 @@ class Product(models.Model):
     """
     Класс для создания товаров
     """
+    VERSION_CHOICES = ((True, 'опубликован'), (False, 'не опубликован'))
+
     product_name = models.CharField(max_length=150, verbose_name='Наименование')
     product_description = models.CharField(max_length=150, verbose_name='Описание')
     product_preview = models.ImageField(upload_to='catalog/', verbose_name='Превью', **NULLABLE)
@@ -40,6 +42,8 @@ class Product(models.Model):
     date_changing = models.DateField(auto_now=True, auto_now_add=False, verbose_name='Дата последнего изменения')
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='владелец', **NULLABLE)
+
+    is_active = models.BooleanField(choices=VERSION_CHOICES, default=False, verbose_name='Публикация продукта')
 
     def __str__(self):
         # Строковое отображение объекта

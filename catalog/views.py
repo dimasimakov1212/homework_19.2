@@ -1,4 +1,5 @@
 from django.contrib.auth import models
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
 from django.forms import inlineformset_factory
 from django.shortcuts import render
@@ -8,7 +9,6 @@ from pytils.translit import slugify
 
 from catalog.forms import ProductForm, BlogForm, VersionForm
 from catalog.models import Product, Blog, Version
-
 
 
 def index(request):
@@ -80,31 +80,10 @@ class ProductListView(ListView):
     #
     #     return queryset
 
-# {% if user.is_authenticated %}
-
-# def product_show(request):
-#     """
-#     Выводит 5 последних товаров на главную страницу
-#     """
-#
-#     product_list = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
-#
-#     # задаем контекстный параметр для вывода на страницу
-#     context = {
-#         'products_list': product_list,
-#         'title': 'Главная'
-#     }
-#
-#     # вывод выбранных товаров в консоль
-#     for product in product_list:
-#         print(product)
-#
-#     return render(request, 'catalog/home.html', context)
-
 
 class ProductDetailView(DetailView):
     """
-    Выводит информаццию об одном, выбранном на главной странице, товаре вместо функции product
+    Выводит информаццию об одном, выбранном на главной странице, товаре
     """
     model = Product
     # template_name = 'catalog/product_detail.html'
@@ -128,13 +107,13 @@ class ProductDetailView(DetailView):
         return context
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(PermissionRequiredMixin, CreateView):
     """
     Выводит форму создания продукта
     """
     model = Product
     form_class = ProductForm
-
+    permission_required = 'catalog.add_product'  # проверка прав доступа на создание товара
     success_url = reverse_lazy('catalog:home')
 
     def get_context_data(self, **kwargs):
@@ -168,13 +147,13 @@ class ProductCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(PermissionRequiredMixin, UpdateView):
     """
     Выводит форму редактирования товара
     """
     model = Product
     form_class = ProductForm
-
+    permission_required = 'catalog.change_product'  # проверка прав доступа на изменение товара
     success_url = reverse_lazy('catalog:home')
 
     def get_context_data(self, **kwargs):
