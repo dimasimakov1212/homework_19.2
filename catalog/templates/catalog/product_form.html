@@ -31,13 +31,15 @@
         <br>
         <div class="col-6">
             <div class="card-body">
-                {{ formset.management_form }}
-                {% for form in formset.forms %}
-                {{ form.as_p }}
-                {% if not forloop.last %}
-                <hr>
+                {% if request.user == product.owner %}
+                    {{ formset.management_form }}
+                    {% for form in formset.forms %}
+                    {{ form.as_p }}
+                    {% if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                    {% endfor %}
                 {% endif %}
-                {% endfor %}
             </div>
         </div>
 

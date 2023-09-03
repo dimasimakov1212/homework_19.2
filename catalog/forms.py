@@ -4,7 +4,15 @@ from django.forms import BaseInlineFormSet, inlineformset_factory
 from catalog.models import Product, Blog, Version
 
 
-class ProductForm(forms.ModelForm):
+class StyleFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name != "is_current_version":
+                field.widget.attrs['class'] = 'form-control'
+
+
+class ProductForm(StyleFormMixin, forms.ModelForm):
     """
      Создает форму для создания товара
     """
@@ -15,13 +23,13 @@ class ProductForm(forms.ModelForm):
         """
         model = Product
 
-        exclude = ('date_creation', 'date_changing', 'owner')  # выводит в форму все поля, кроме указанных
+        exclude = ('date_creation', 'date_changing', 'owner', 'is_active')  # выводит в форму все поля, кроме указанных
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #
+    #     for field_name, field in self.fields.items():
+    #         field.widget.attrs['class'] = 'form-control'
 
     def clean(self):
         """
@@ -45,7 +53,7 @@ class ProductForm(forms.ModelForm):
         return cleaned_data
 
 
-class BlogForm(forms.ModelForm):
+class BlogForm(StyleFormMixin, forms.ModelForm):
     """
      Создает форму для создания товара
     """
@@ -58,14 +66,8 @@ class BlogForm(forms.ModelForm):
 
         fields = ('blog_title', 'blog_text', 'blog_preview')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
-
-
-class VersionForm(forms.ModelForm):
+class VersionForm(StyleFormMixin, forms.ModelForm):
     """
     Создает форму для заполнения даннных версии товара
     """
@@ -77,11 +79,11 @@ class VersionForm(forms.ModelForm):
         # exclude = ('is_active',)
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #
+    #     for field_name, field in self.fields.items():
+    #         field.widget.attrs['class'] = 'form-control'
 
     def clean(self):
         """
@@ -98,6 +100,13 @@ class VersionForm(forms.ModelForm):
             raise forms.ValidationError('Возможна лишь одна активная версия. Пожалуйста, активируйте только 1 версию.')
 
         return cleaned_data
+
+
+class ProductModeratorForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('product_description', 'product_category', 'is_active',)
+
 
 # class VersionFormSet(BaseInlineFormSet):
 #

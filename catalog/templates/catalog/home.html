@@ -34,6 +34,14 @@
             {% endif %}
             <br>
             <small class="text-body-secondary">Владелец - {{ product.owner|default:"Не определен" }}</small>
+            <br>
+            {% if request.user.is_staff %}
+                {% if product.is_active %}
+                <small class="text-success">Статус товара - Опубликован</small>
+                {% else %}
+                <small class="text-danger">Статус товара - На модерации</small>
+                {% endif %}
+            {% endif %}
             <br><br>
             <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product' pk=product.id %}">Купить</a>
             {% if request.user == product.owner or request.user.is_staff %}

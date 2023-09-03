@@ -1,4 +1,5 @@
 from django.contrib.auth import models
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.forms import inlineformset_factory
 from django.shortcuts import render
@@ -6,9 +7,8 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
-from catalog.forms import ProductForm, BlogForm, VersionForm
+from catalog.forms import ProductForm, BlogForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Blog, Version
-
 
 
 def index(request):
@@ -37,13 +37,44 @@ def contact(request):
 
 class ProductListView(ListView):
     """
-    Выводит информаццию о 5 последних товарах на главную страницу
+    Выводит информаццию о последних 6 товарах на главную страницу
     """
 
     model = Product
-    queryset = Product.objects.all().order_by('-pk')[:6]  # получаем 5 последних товаров
+    # queryset = Product.objects.all().order_by('-pk')[:6]  # получаем 6 последних товаров
 
     template_name = 'catalog/home.html'
+
+    def get_queryset(self):
+
+        user = self.request.user
+
+        if user.is_authenticated:  # для зарегистрированных пользователей
+            if user.is_staff or user.is_superuser:  # для работников и суперпользователя
+                queryset = super().get_queryset().order_by('-pk')[:6]
+
+            else:  # для остальных пользователей
+                queryset = super().get_queryset().filter(
+                    is_active=True).order_by('-pk')[:6]
+        else:  # для незарегистрированных пользователей
+            queryset = super().get_queryset().filter(
+                is_active=True).order_by('-pk')[:6]
+        return queryset
+
+    # def get_queryset(self, *args, **kwargs):
+    #     """
+    #     Выводит в список только товары конкретного пользователя,
+    #     либо если пользователь не авторизован - выводит все товары
+    #     """
+    #     queryset = super().get_queryset(*args, **kwargs)
+    #
+    #     try:
+    #         queryset = queryset.filter(owner=self.request.user)
+    #
+    #     except TypeError:
+    #         queryset = queryset.all().order_by('-pk')[:5]  # выводит последние 5 товаров
+    #
+    #     return queryset
 
     def get_context_data(self, **kwargs):
         """
@@ -64,42 +95,6 @@ class ProductListView(ListView):
         context['title_2'] = 'лучшие товары для вас'
 
         return context
-
-    # def get_queryset(self, *args, **kwargs):
-    #     """
-    #     Выводит в список только товары конкретного пользователя,
-    #     либо если пользователь не авторизован - выводит все товары
-    #     """
-    #     queryset = super().get_queryset(*args, **kwargs)
-    #
-    #     try:
-    #         queryset = queryset.filter(owner=self.request.user)
-    #
-    #     except TypeError:
-    #         queryset = queryset.all().order_by('-pk')[:5]  # выводит последние 5 товаров
-    #
-    #     return queryset
-
-# {% if user.is_authenticated %}
-
-# def product_show(request):
-#     """
-#     Выводит 5 последних товаров на главную страницу
-#     """
-#
-#     product_list = Product.objects.all().order_by('-pk')[:5]  # получаем 5 последних товаров
-#
-#     # задаем контекстный параметр для вывода на страницу
-#     context = {
-#         'products_list': product_list,
-#         'title': 'Главная'
-#     }
-#
-#     # вывод выбранных товаров в консоль
-#     for product in product_list:
-#         print(product)
-#
-#     return render(request, 'catalog/home.html', context)
 
 
 class ProductDetailView(DetailView):
@@ -176,6 +171,20 @@ class ProductUpdateView(UpdateView):
     form_class = ProductForm
 
     success_url = reverse_lazy('catalog:home')
+
+    def get_form_class(self):
+        product = self.get_object()
+        user = self.request.user
+        print('get_form')
+
+        if user.is_staff:
+            return ProductModeratorForm
+
+        elif product.owner == user:
+            print('tut')
+            return ProductForm
+
+        return super().get_form_class()
 
     def get_context_data(self, **kwargs):
         """
