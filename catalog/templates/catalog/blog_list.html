@@ -19,28 +19,33 @@
 
 {% block content %}
 
-    {% for object in object_list %}
+{% for object in object_list %}
 
-    <div class="col-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <p class="card-text">Статья: {{ object.blog_title }} ({{ object.blog_slug }})</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                        <a type="button" class="btn btn-sm btn-outline-secondary"
-                           href="{% url 'catalog:blog_article' pk=object.id %}">View</a>
-                        <a type="button" class="btn btn-sm btn-outline-secondary"
-                           href="{% url 'catalog:edit_article' pk=object.id %}">Edit</a>
-                        <a type="button" class="btn btn-sm btn-outline-danger"
-                           href="{% url 'catalog:delete_article' pk=object.id %}">Delete</a>
-                    </div>
-                    <small class="text-body-secondary">Количество просмотров - {{ object.blog_views_count }}</small>
+<div class="col-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="card-text">Статья: {{ object.blog_title }} ({{ object.blog_slug }})</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a type="button" class="btn btn-sm btn-outline-secondary"
+                       href="{% url 'catalog:blog_article' pk=object.id %}">View</a>
+                    {% if request.user == object.owner or request.user.is_staff %}
+                    <a type="button" class="btn btn-sm btn-outline-secondary"
+                       href="{% url 'catalog:edit_article' pk=object.id %}">Edit</a>
+                    <a type="button" class="btn btn-sm btn-outline-danger"
+                       href="{% url 'catalog:delete_article' pk=object.id %}">Delete</a>
+                    {% endif %}
                 </div>
             </div>
+            <br>
+            <small class="text-body-secondary">Количество просмотров - {{ object.blog_views_count }}</small>
+            <br>
+            <small class="text-body-secondary">Владелец - {{ object.owner|default:"Не определен" }}</small>
         </div>
     </div>
+</div>
 
-    {% endfor %}
+{% endfor %}
 
 
 {% endblock %}

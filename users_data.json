@@ -1,0 +1,86 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$ALPjT4YMeAYhO8dyENiRoc$njkgpvM+An2FPjMhl+VhX9gkyVE+T89NM5dBqdVIWJk=",
+      "last_login": "2023-09-02T09:08:30.481Z",
+      "is_superuser": true,
+      "first_name": "Admin",
+      "last_name": "SkyPro",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-08-30T08:46:03.393Z",
+      "email": "admin@sky.pro",
+      "phone": null,
+      "avatar": "",
+      "country": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$UfVc7zVU13SQ9bCVZqrXBy$2Cuw/FB9RUgpLuI/A0sAe5ZEX9/SzyEj4LE+WNYvTus=",
+      "last_login": "2023-09-02T08:11:51.977Z",
+      "is_superuser": false,
+      "first_name": "Dima",
+      "last_name": "Dimas",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-30T09:50:15Z",
+      "email": "test@mail.com",
+      "phone": null,
+      "avatar": "",
+      "country": "Russia",
+      "groups": [
+        2
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$OIRGjDFR6radaMI3xJeZUm$UH9yAoxc4YDewPZaHJDia9xC2ODjr1NPpns7rSqOGw8=",
+      "last_login": "2023-09-02T09:09:05.396Z",
+      "is_superuser": false,
+      "first_name": "Dima",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-08-30T12:20:20Z",
+      "email": "pionof@mail.ru",
+      "phone": null,
+      "avatar": "",
+      "country": null,
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$GIbgNKo0ggIvhpj47HjO4y$h8+/c3BTAaeP+6I0gnzjwa4g6wl/rPbGjgh08Fcf5mM=",
+      "last_login": "2023-09-01T13:58:56.422Z",
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-09-01T13:57:39.665Z",
+      "email": "dimarodeo@gmail.com",
+      "phone": null,
+      "avatar": "",
+      "country": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

@@ -279,6 +279,10 @@ class BlogCreateView(CreateView):
         """
         Реализует создание Slug — человекопонятный URL
         """
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+
         if form.is_valid():
             new_article = form.save()
             new_article.blog_slug = slugify(new_article.blog_title)

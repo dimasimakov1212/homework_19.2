@@ -31,6 +31,8 @@ class Product(models.Model):
     """
     Класс для создания товаров
     """
+    VERSION_CHOICES = ((True, 'Опубликован'), (False, 'На модерации'))
+
     product_name = models.CharField(max_length=150, verbose_name='Наименование')
     product_description = models.CharField(max_length=150, verbose_name='Описание')
     product_preview = models.ImageField(upload_to='catalog/', verbose_name='Превью', **NULLABLE)
@@ -40,6 +42,7 @@ class Product(models.Model):
     date_changing = models.DateField(auto_now=True, auto_now_add=False, verbose_name='Дата последнего изменения')
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='владелец', **NULLABLE)
+    is_active = models.BooleanField(choices=VERSION_CHOICES, default=False, verbose_name='Текущая версия')
 
     def __str__(self):
         # Строковое отображение объекта
@@ -49,6 +52,12 @@ class Product(models.Model):
         verbose_name = 'Товар'  # Настройка для наименования одного объекта
         verbose_name_plural = 'Товары'  # Настройка для наименования набора объектов
         ordering = ('product_name',)  # сортировка по наименованию
+
+        permissions = [
+            ('set_product_is_active', 'Can change the status of products'),
+            ('change_product_description', 'Can change product description'),
+            ('change_product_category', 'Can change product category'),
+        ]
 
 
 class Version(models.Model):
@@ -83,6 +92,8 @@ class Blog(models.Model):
     blog_date_creation = models.DateField(auto_now=False, auto_now_add=True, verbose_name='Дата создания')
     blog_is_active = models.BooleanField(default=True, verbose_name='Опубликовано')
     blog_views_count = models.IntegerField(default=0, verbose_name='Просмотры')
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='владелец', **NULLABLE)
 
     def __str__(self):
         # Строковое отображение объекта
