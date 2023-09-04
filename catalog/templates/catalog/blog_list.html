@@ -29,9 +29,11 @@
                 <div class="btn-group">
                     <a type="button" class="btn btn-sm btn-outline-secondary"
                        href="{% url 'catalog:blog_article' pk=object.id %}">View</a>
-                    {% if request.user == object.owner or request.user.is_staff %}
+                    {% if perms.catalog.change_blog %}
                     <a type="button" class="btn btn-sm btn-outline-secondary"
                        href="{% url 'catalog:edit_article' pk=object.id %}">Edit</a>
+                    {% endif %}
+                    {% if perms.catalog.delete_blog %}
                     <a type="button" class="btn btn-sm btn-outline-danger"
                        href="{% url 'catalog:delete_article' pk=object.id %}">Delete</a>
                     {% endif %}

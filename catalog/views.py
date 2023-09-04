@@ -7,6 +7,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
+import catalog
 from catalog.forms import ProductForm, BlogForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Blog, Version
 
@@ -309,12 +310,13 @@ class BlogCreateView(CreateView):
         return context
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(PermissionRequiredMixin, UpdateView):
     """
     Выводит форму редактирования статьи
     """
     model = Blog
     form_class = BlogForm
+    permission_required = 'catalog.change_blog'
 
     def form_valid(self, form):
         """
@@ -343,11 +345,12 @@ class BlogUpdateView(UpdateView):
         return context
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(PermissionRequiredMixin, DeleteView):
     """
     Выводит форму удаления статьи
     """
     model = Blog
+    permission_required = 'catalog.delete_blog'
     success_url = reverse_lazy('catalog:blog_list')
 
     def get_context_data(self, **kwargs):
