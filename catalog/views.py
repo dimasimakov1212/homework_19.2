@@ -12,6 +12,7 @@ from django.core.cache import cache
 import catalog
 from catalog.forms import ProductForm, BlogForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Blog, Version
+from catalog.services import get_product_categories
 
 
 def index(request):
@@ -139,59 +140,55 @@ class ProductDetailView(DetailView):
     model = Product
     # template_name = 'catalog/product_detail.html'
 
-# --------------------- рабочая версия ------------------------
-#     def get_context_data(self, **kwargs):
-#         """
-#         Выводит контекстную информацию в шаблон
-#         """
-#         context = super().get_context_data(**kwargs)
-#
-#         active_version = Version.objects.filter(product=self.object, is_active=True).last()
-#         if active_version:
-#             context['active_version_number'] = active_version.version_number
-#             context['active_version_name'] = active_version.version_name
-#         else:
-#             context['active_version_number'] = None
-#             context['active_version_name'] = None
-#
-#         context['title'] = 'Карточка товара'
-#
-#         return context
-# --------------------------------------------------------------------
-
+# --------------------- версия без кэширования ------------------------
     def get_context_data(self, **kwargs):
         """
         Выводит контекстную информацию в шаблон
         """
         context = super().get_context_data(**kwargs)
 
-        if settings.CACHE_ENABLED:
-
-            key = 'active_version'  # ключ, по которому получаем список версий
-            active_version = cache.get(key)  # получаем астивную версию
-
-            if active_version is None:
-                # проверяем кэш, если пусто, получаем данные из БД
-                active_version = self.object.version_set.filter(is_active=True).last()
-
-                cache.set(key, active_version)  # кэшируем активную версию
-
-                context['active_version_number'] = active_version.version_number
-                context['active_version_name'] = active_version.version_name
-
-            else:
-                context['active_version_number'] = active_version.version_number
-                context['active_version_name'] = active_version.version_name
-
-        else:
-            active_version = self.object.version_set.filter(is_active=True).last()
-
+        active_version = Version.objects.filter(product=self.object, is_active=True).last()
+        if active_version:
             context['active_version_number'] = active_version.version_number
             context['active_version_name'] = active_version.version_name
+        else:
+            context['active_version_number'] = None
+            context['active_version_name'] = None
 
         context['title'] = 'Карточка товара'
 
         return context
+
+# --------------------- версия с кэшированием --------------------------
+#     def get_context_data(self, **kwargs):
+#         """
+#         Выводит контекстную информацию в шаблон
+#         """
+#         context = super().get_context_data(**kwargs)
+#
+#         version_is_active = self.object.version_set.filter(is_active=True).last()
+#
+#         if version_is_active:  # проверяем наличие версий
+#
+#             if settings.CACHE_ENABLED:
+#                 key = 'active_version'  # ключ, по которому получаем список версий
+#                 active_version = cache.get(key)  # получаем астивную версию
+#
+#                 if active_version is None:
+#                     # проверяем кэш, если пусто, получаем данные из БД
+#                     active_version = self.object.version_set.filter(is_active=True).last()
+#
+#                     cache.set(key, active_version)  # кэшируем активную версию
+#
+#             else:
+#                 active_version = self.object.version_set.filter(is_active=True).last()
+#
+#             context['active_version_number'] = active_version.version_number
+#             context['active_version_name'] = active_version.version_name
+#
+#         context['title'] = 'Карточка товара'
+#
+#         return context
 
 
 class ProductCreateView(CreateView):
