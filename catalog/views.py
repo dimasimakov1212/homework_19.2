@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import models
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -6,6 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
+from django.core.cache import cache
 
 import catalog
 from catalog.forms import ProductForm, BlogForm, VersionForm, ProductModeratorForm
@@ -77,6 +79,7 @@ class ProductListView(ListView):
     #
     #     return queryset
 
+# --------------------- рабочая версия ---------------------------
     def get_context_data(self, **kwargs):
         """
         Выводит контекстную информацию в шаблон
@@ -96,6 +99,37 @@ class ProductListView(ListView):
         context['title_2'] = 'лучшие товары для вас'
 
         return context
+# # ----------------------------------------------------------------
+
+    # def get_context_data(self, **kwargs):
+    #     """
+    #     Выводит контекстную информацию в шаблон
+    #     """
+    #     context = super().get_context_data(**kwargs)
+    #
+    #     for product in context['product_list']:
+    #
+    #         if settings.CACHE_ENABLED:
+    #             key = 'version_list'
+    #             active_version = cache.get(key)
+    #
+    #             if active_version is None:
+    #                 active_version = Version.objects.filter(product=product, is_active=True).last()
+    #                 cache.set(key, active_version)
+    #
+    #             product.active_version_number = active_version.version_number
+    #             product.active_version_name = active_version.version_name
+    #
+    #         else:
+    #             active_version = Version.objects.filter(product=product, is_active=True).last()
+    #
+    #             product.active_version_number = active_version.version_number
+    #             product.active_version_name = active_version.version_name
+    #
+    #     context['title'] = 'Главная'
+    #     context['title_2'] = 'лучшие товары для вас'
+    #
+    #     return context
 
 
 class ProductDetailView(DetailView):
@@ -105,19 +139,55 @@ class ProductDetailView(DetailView):
     model = Product
     # template_name = 'catalog/product_detail.html'
 
+# --------------------- рабочая версия ------------------------
+#     def get_context_data(self, **kwargs):
+#         """
+#         Выводит контекстную информацию в шаблон
+#         """
+#         context = super().get_context_data(**kwargs)
+#
+#         active_version = Version.objects.filter(product=self.object, is_active=True).last()
+#         if active_version:
+#             context['active_version_number'] = active_version.version_number
+#             context['active_version_name'] = active_version.version_name
+#         else:
+#             context['active_version_number'] = None
+#             context['active_version_name'] = None
+#
+#         context['title'] = 'Карточка товара'
+#
+#         return context
+# --------------------------------------------------------------------
+
     def get_context_data(self, **kwargs):
         """
         Выводит контекстную информацию в шаблон
         """
         context = super().get_context_data(**kwargs)
 
-        active_version = Version.objects.filter(product=self.object, is_active=True).last()
-        if active_version:
+        if settings.CACHE_ENABLED:
+
+            key = 'active_version'  # ключ, по которому получаем список версий
+            active_version = cache.get(key)  # получаем астивную версию
+
+            if active_version is None:
+                # проверяем кэш, если пусто, получаем данные из БД
+                active_version = self.object.version_set.filter(is_active=True).last()
+
+                cache.set(key, active_version)  # кэшируем активную версию
+
+                context['active_version_number'] = active_version.version_number
+                context['active_version_name'] = active_version.version_name
+
+            else:
+                context['active_version_number'] = active_version.version_number
+                context['active_version_name'] = active_version.version_name
+
+        else:
+            active_version = self.object.version_set.filter(is_active=True).last()
+
             context['active_version_number'] = active_version.version_number
             context['active_version_name'] = active_version.version_name
-        else:
-            context['active_version_number'] = None
-            context['active_version_name'] = None
 
         context['title'] = 'Карточка товара'
 
