@@ -9,7 +9,7 @@ from main.apps import MainConfig
 app_name = MainConfig.name
 
 urlpatterns = [
-    path('', cache_page(60)(ProductListView.as_view()), name='home'),
+    path('', ProductListView.as_view(), name='home'),
     path('contacts/', contact, name='contacts'),
     path('product/<int:pk>/', cache_page(60)(ProductDetailView.as_view()), name='product'),
     path('create_product/', ProductCreateView.as_view(), name='create_product'),
