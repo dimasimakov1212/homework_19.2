@@ -243,13 +243,11 @@ class ProductUpdateView(UpdateView):
     def get_form_class(self):
         product = self.get_object()
         user = self.request.user
-        print('get_form')
 
-        if user.is_staff:
-            return ProductModeratorForm
+        if user.is_staff:  # проверяем права доступа
+            return ProductModeratorForm  # если модератор, то выводится отдельная форма
 
         elif product.owner == user:
-            print('tut')
             return ProductForm
 
         return super().get_form_class()
